@@ -1,5 +1,5 @@
 CREATE TYPE Gender AS ENUM ('m', 'f', 'o');
-CREATE TYPE Genre AS ENUM ("rnb", "country", "classic", "rock", "jazz");
+CREATE TYPE Genre AS ENUM ('rnb', 'country', 'classic', 'rock', 'jazz');
 
 -- Create the User table
 CREATE TABLE IF NOT EXISTS "User" (
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS "User" (
   email VARCHAR(255) NOT NULL,
   password VARCHAR(500) NOT NULL,
   phone VARCHAR(20) NOT NULL,
-  dob DATETIME NOT NULL,
+  dob TIMESTAMP NOT NULL,
   gender Gender NOT NULL,
   address VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 CREATE TABLE IF NOT EXISTS "Artist" (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  dob DATETIME NOT NULL,
+  dob TIMESTAMP NOT NULL,
   gender Gender,
   address VARCHAR(255) NOT NULL,
   first_release_year INT NOT NULL,
