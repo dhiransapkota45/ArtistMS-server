@@ -1,5 +1,4 @@
-export type TUser = {
-    id: number;
+export type TUserPayload = {
     first_name: string;
     last_name: string;
     email: string;
@@ -9,27 +8,37 @@ export type TUser = {
     gender : "m" | "f" | "o";
     address : string;
     role : "super_admin" | "artist_manager" | "artist";
-    created_at: Date;
-    updated_at: Date;
 }
 
-export type TArtist = {
+export type TUser = {
     id: number;
+    created_at: Date;
+    updated_at: Date;
+} & TUserPayload;
+
+export type TArtistPayload = {
     name : string;
     dob : Date;
     gender : "m" | "f" | "o";
     address : string;
     first_release_year : number;
+}
+
+export type TArtist = {
+    id: number;
     created_at: Date;
     updated_at: Date;
+} & TArtistPayload;
+
+export type TMusicPayload = {
+    artist_id : number;
+    title : string;
+    album_name : string;
+    genre : "rnb" | "country" | "classic" | "rock" | "jazz";
 }
 
 export type TMusic = {
     id: number;
-    artist_id : number;
-    title : string;
-    album_name : number;
-    genre : "rnb" | "country" | "classic" | "rock" | "jazz";
     created_at: Date;
     updated_at: Date;
-}
+} & TMusicPayload;
