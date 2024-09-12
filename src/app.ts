@@ -1,9 +1,56 @@
-import express from 'express';
+import http from 'http';
+import express, { Request, Response, Application, NextFunction } from 'express';
+import cors from 'cors';
 
-const app = express();
+import env from './config/env';
+import { UserRoute } from './routes/userRoute';
+import { ApiError } from './utils/ApiError';
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+ export class App {
+  private app: Application = express();
+  private port: number = env.PORT;
+  private server: http.Server | undefined;
 
-export default app;
+  private userRoute = new UserRoute();
+  constructor(){
+    this.setupMiddlewares();
+    this.setupRoutes();
+    this.setupExceptionHandler();
+  }
+
+  setupMiddlewares(){
+    this.app.use(express.json());
+    this.app.use(cors({origin: '*'}));
+    this.app.use(express.urlencoded({extended: true}));
+  }
+
+  setupExceptionHandler(){
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      const error = new ApiError(500, err.message, [])
+      console.log(error)
+      return res.status(error.status).json(error);
+    });
+  }
+
+  setupRoutes(){
+    this.app.use('/', this.userRoute.router);
+
+    //test route
+    this.app.get('/', (req, res) => {
+      return res.send('Hello World');
+    });
+  }
+
+  listen(){
+    this.server = this.app.listen(this.port, () => {
+      console.log(`Server running on port ${this.port}`);
+    });
+  }
+
+  close(){
+    this.server?.close(()=>{
+      console.log('Server closed');
+      process.exit(0);
+    });
+  }
+}
