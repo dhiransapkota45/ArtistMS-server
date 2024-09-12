@@ -9,7 +9,7 @@
     "start": "node dist/app.js",
     "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "migrate": "psql -U postgres -d artistms -f src/database/migrations/init.sql"
+    "migrate": "nodemon src/scripts/migrate.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.5",

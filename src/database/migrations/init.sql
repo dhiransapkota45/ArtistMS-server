@@ -1,5 +1,6 @@
 CREATE TYPE Gender AS ENUM ('m', 'f', 'o');
 CREATE TYPE Genre AS ENUM ('rnb', 'country', 'classic', 'rock', 'jazz');
+CREATE TYPE Role AS ENUM ('super_admin' , 'artist_manager', 'artist');
 
 -- Create the User table
 CREATE TABLE IF NOT EXISTS "User" (
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS "User" (
   dob TIMESTAMP NOT NULL,
   gender Gender NOT NULL,
   address VARCHAR(255) NOT NULL,
+  role Role NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(email)
