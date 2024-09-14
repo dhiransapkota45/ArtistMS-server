@@ -1,5 +1,6 @@
 import { UserRoles } from "../data/constant";
 import { validateArtist } from "../middleware/validation/artistValidation";
+import { validateMusic } from "../middleware/validation/musicValidation";
 import { validateUser } from "../middleware/validation/userValidation";
 import { verifyToken } from "../middleware/verifyToken";
 
@@ -52,6 +53,47 @@ export const userRoutes : Route[] = [
     validation : validateUser
   },
 ];
+
+
+export const musicRoutes : Route[] = [
+  {
+    path: "/",
+    method: "get",
+    action: "getAllMusic",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+  },
+  {
+    path: "/delete/:id",
+    method: "delete",
+    action: "deleteMusic",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+  },
+  {
+    path: "/update/:id",
+    method: "patch",
+    action: "updateMusic",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+    validation : validateMusic
+  },
+  {
+    path: "/:id",
+    method: "get",
+    action: "getMusic",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN]
+  },
+  {
+    path: "/create",
+    method: "post",
+    action: "createMusic",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+    validation : validateMusic
+  }
+]
 
 
 export const artistRoutes : Route[] = [
