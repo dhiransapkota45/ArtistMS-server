@@ -5,6 +5,7 @@ import cors from 'cors';
 import env from './config/env';
 import { UserRoute } from './routes/userRoute';
 import { ApiError } from './utils/ApiError';
+import { AuthRoute } from './routes/authRoutes';
 
  export class App {
   private app: Application = express();
@@ -12,6 +13,7 @@ import { ApiError } from './utils/ApiError';
   private server: http.Server | undefined;
 
   private userRoute = new UserRoute();
+  private authRoute = new AuthRoute();
   constructor(){
     this.setupMiddlewares();
     this.setupRoutes();
@@ -34,6 +36,7 @@ import { ApiError } from './utils/ApiError';
 
   setupRoutes(){
     this.app.use('/', this.userRoute.router);
+    this.app.use('/', this.authRoute.router);
 
     //test route
     this.app.get('/', (req, res) => {

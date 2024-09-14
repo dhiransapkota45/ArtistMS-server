@@ -15,14 +15,14 @@ export class UserRoute implements Route {
   }
 
   setupRoutes() {
-    this.router.post(`${this.path}/create`, verifyToken, asyncHandler(this.userController.createUser.bind(this.userController)));
+    this.router.post(`${this.path}/create`, asyncHandler(this.userController.createUser.bind(this.userController)));
 
-    this.router.get(`${this.path}`, verifyToken, asyncHandler(this.userController.getAllUser.bind(this.userController)));
+    this.router.get(`${this.path}`, asyncHandler(this.userController.getAllUser.bind(this.userController)));
 
-    this.router.delete(`${this.path}/delete/:id`, verifyToken, asyncHandler(this.userController.deleteUser.bind(this.userController)));
+    this.router.delete(`${this.path}/delete/:id`, asyncHandler(this.userController.deleteUser.bind(this.userController)));
 
-    this.router.patch(`${this.path}/update/:id`, verifyToken, asyncHandler(this.userController.updateUser.bind(this.userController)));
+    this.router.patch(`${this.path}/update/:id`, asyncHandler(this.userController.updateUser.bind(this.userController)));
 
-    this.router.get(`${this.path}/:id`, verifyToken, asyncHandler(this.userController.getUser.bind(this.userController)));
+    this.router.get(`${this.path}/:id`, asyncHandler(this.userController.getUser.bind(this.userController)));
   }
 }
