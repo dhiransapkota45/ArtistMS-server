@@ -1,3 +1,6 @@
+import { Request } from "express";
+import { JwtPayload } from "jsonwebtoken";
+
 export type TUserPayload = {
     first_name: string;
     last_name: string;
@@ -44,3 +47,8 @@ export type TMusic = {
     created_at: Date;
     updated_at: Date;
 } & TMusicPayload;
+
+
+export type CustomRequest<T> = Request & T
+
+export type UserRequest = CustomRequest<{ userid?: string }>;
