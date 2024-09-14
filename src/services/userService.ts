@@ -40,18 +40,18 @@ export class UserService {
   public async updateUserById(id: number, user: TPartialUserPayload): Promise<TUser> {
     let statment = '';
     let values: (string | number | boolean | null)[] = [];
-    Object.keys(user).forEach((key, index) => {
-      statment += `${key} = $${index + 1}, `;
+    let lastElement = 0;
+    Object.keys(user).forEach((key) => {
+      statment += `${key} = $${++lastElement}, `;
       values.push((user as any)[key]);
     })
-    console.log(statment, 'statment', statment.slice(0, -2));
     const query = `
       UPDATE public."${Tables.USER}"
       SET ${statment.slice(0, -2)}
-      WHERE id = $5
+      WHERE id = $${++lastElement}
       RETURNING id, first_name, last_name, email, role;
     `;
-    const result = await pool.query(query, values);
+    const result = await pool.query(query, [...values, id]);
     return result.rows[0] as TUser;
   }
 
@@ -64,6 +64,15 @@ export class UserService {
     const values = [id];
     const result = await pool.query(query, values);
     return result.rows[0] as TUser;
+  }
+
+  public async getAllUser(): Promise<TUser[]> {
+    const query = `
+      SELECT id, first_name, last_name, email, role
+      FROM public."${Tables.USER}";
+    `;
+    const result = await pool.query(query);
+    return result.rows as TUser[];
   }
 
 }
