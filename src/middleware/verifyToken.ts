@@ -7,7 +7,7 @@ import { UserRequest } from '../types/types';
 export const verifyToken = (req: UserRequest, res: Response, next: NextFunction) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) {
-    return ApiResponse.error(res, 'No token provided', 403, []);
+    return ApiResponse.error(res, 403, 'No token provided', []);
   }
 
   try {
@@ -16,9 +16,9 @@ export const verifyToken = (req: UserRequest, res: Response, next: NextFunction)
     next();
   } catch (error : unknown) {
     if(error instanceof jwt.JsonWebTokenError){
-        return ApiResponse.error(res, error.message, 401, []);
+        return ApiResponse.error(res, 401, error.message, []);
     }else{
-        return ApiResponse.error(res, 'Authentication failed', 401, []);
+        return ApiResponse.error(res, 401, 'Authentication failed', []);
     }
   }
 };
