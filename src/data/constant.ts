@@ -8,3 +8,5 @@ export const UserRoles = {
     ARTIST_MANAGER: 'artist_manager',
     ARTIST: 'artist',
 }
+
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

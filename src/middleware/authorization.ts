@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserRequest } from "../types/types";
 import { ApiResponse } from "../utils/ApiResponse";
 
-export const authorization = (req : UserRequest, res : Response, next : NextFunction, allowedUsers : string[]) => {
+export const authorization = (allowedUsers : string[]) => (req : UserRequest, res : Response, next : NextFunction) => {
     if(allowedUsers.includes("bypass")){
         next()
     }else{

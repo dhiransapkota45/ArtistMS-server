@@ -1,4 +1,5 @@
 import { UserRoles } from "../data/constant";
+import { validateUser } from "../middleware/validation/userValidation";
 import { verifyToken } from "../middleware/verifyToken";
 
 type Route = {
@@ -7,6 +8,7 @@ type Route = {
     action : string;
     middleware : any[];
     allowedUsers : string[];
+    validation ?: Function
 }
 
 const { ARTIST, ARTIST_MANAGER, SUPER_ADMIN } = UserRoles
@@ -31,6 +33,7 @@ export const userRoutes : Route[] = [
     action: "updateUser",
     middleware: [verifyToken],
     allowedUsers: [SUPER_ADMIN],
+    validation : validateUser
   },
   {
     path: "/:id",
@@ -45,5 +48,6 @@ export const userRoutes : Route[] = [
     action: "createUser",
     middleware: [verifyToken],
     allowedUsers: [SUPER_ADMIN],
+    validation : validateUser
   },
 ];
