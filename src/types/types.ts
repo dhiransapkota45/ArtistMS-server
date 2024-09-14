@@ -51,4 +51,4 @@ export type TMusic = {
 
 export type CustomRequest<T> = Request & T
 
-export type UserRequest = CustomRequest<{ userid?: string }>;
+export type UserRequest = CustomRequest<{ user?: TUser }>;

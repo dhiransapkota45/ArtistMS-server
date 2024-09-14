@@ -3,8 +3,9 @@ import jwt from 'jsonwebtoken';
 import { ApiResponse } from '../utils/ApiResponse';
 import env from '../config/env';
 import { UserRequest } from '../types/types';
+import { UserService } from '../services/userService';
 
-export const verifyToken = (req: UserRequest, res: Response, next: NextFunction) => {
+export const verifyToken = async(req: UserRequest, res: Response, next: NextFunction) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) {
     return ApiResponse.error(res, 403, 'No token provided', []);
@@ -12,7 +13,12 @@ export const verifyToken = (req: UserRequest, res: Response, next: NextFunction)
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET as string);
-    req.userid = typeof decoded !== "string" && decoded?.userid;
+    const userService = new UserService()
+    const user =  typeof decoded !== "string" && await userService.getUserById(decoded?.userid)
+    if(!user){
+      return ApiResponse.error(res, 401, 'Authentication failed')
+    }
+    req.user = user;
     next();
   } catch (error : unknown) {
     if(error instanceof jwt.JsonWebTokenError){
