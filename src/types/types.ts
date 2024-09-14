@@ -10,6 +10,8 @@ export type TUserPayload = {
     role : "super_admin" | "artist_manager" | "artist";
 }
 
+export type TPartialUserPayload = Partial<TUserPayload>;
+
 export type TUser = {
     id: number;
     created_at: Date;
