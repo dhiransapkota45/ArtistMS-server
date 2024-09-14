@@ -17,7 +17,7 @@ export class UserService {
 
   public async getUserByEmail(email: string): Promise<TUser> {
     const query = `
-      SELECT id, first_name, last_name, email, role
+      SELECT id, first_name, last_name, email, role, password
       FROM public."${Tables.USER}"
       WHERE email = $1;
     `;

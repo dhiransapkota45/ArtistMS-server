@@ -1,12 +1,15 @@
 import { UserService } from "../services/userService";
 import type {Request, Response}  from "express"
 import { ApiResponse } from "../utils/ApiResponse";
+import { hashPassword } from "../utils/hashPassword";
 
 export class UserController {
     private userService: UserService = new UserService();
 
     async createUser (req: Request, res: Response): Promise<any> {
-        const user = await this.userService.createUser(req.body);
+        const { password } = req.body;
+        const hashedPassword = await hashPassword(password);
+        const user = await this.userService.createUser({...req.body, password: hashedPassword});
         return ApiResponse.success(res, "User created successfully", user, 201);
     }
 

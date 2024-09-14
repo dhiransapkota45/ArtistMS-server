@@ -16,7 +16,8 @@ export class AuthController {
             return ApiResponse.error(res, 404, "Invalid Credentials",);
         }
 
-        if(!verifyPassword(req.body.password, isUserExists.password)) {
+        const isPasswordMatch = await verifyPassword(req.body.password, isUserExists.password);
+        if(!isPasswordMatch) {
             return ApiResponse.error(res, 401, "Invalid Credentials",);
         }
 
