@@ -8,6 +8,12 @@ export class UserController {
 
     async createUser (req: Request, res: Response): Promise<any> {
         const { password } = req.body;
+
+        const userExist = await this.userService.getUserByEmail(req.body.email);
+        if (userExist) {
+            return ApiResponse.error(res, 409, "User with that email already exist");
+        }
+
         const hashedPassword = await hashPassword(password);
         const user = await this.userService.createUser({...req.body, password: hashedPassword});
         return ApiResponse.success(res, "User created successfully", user, 201);
@@ -24,6 +30,12 @@ export class UserController {
     }
 
     async updateUser (req: Request, res: Response): Promise<any> {
+
+        const userExist = await this.userService.getUserById(Number(req.params.id));
+        if (!userExist) {
+            return ApiResponse.error(res, 404, "User not found");
+        }
+
         const user = await this.userService.updateUserById(Number(req.params.id), req.body);
         return ApiResponse.success(res, "User updated successfully", user, 200);
     }

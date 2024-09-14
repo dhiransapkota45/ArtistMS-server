@@ -21,20 +21,6 @@ export type TUser = {
     updated_at: Date;
 } & TUserPayload;
 
-export type TArtistPayload = {
-    name : string;
-    dob : Date;
-    gender : "m" | "f" | "o";
-    address : string;
-    first_release_year : number;
-}
-
-export type TArtist = {
-    id: number;
-    created_at: Date;
-    updated_at: Date;
-} & TArtistPayload;
-
 export type TMusicPayload = {
     artist_id : number;
     title : string;
@@ -52,3 +38,18 @@ export type TMusic = {
 export type CustomRequest<T> = Request & T
 
 export type UserRequest = CustomRequest<{ user?: TUser }>;
+
+export type TArtistPayload = {
+    name : string;
+    dob : Date;
+    gender : "m" | "f" | "o";
+    address : string;
+    first_release_year : number;
+    no_of_albums_released ?: number;    
+}
+
+export type TArtist = {
+    id: number;
+    created_at: Date;
+    updated_at: Date;
+} & TArtistPayload;

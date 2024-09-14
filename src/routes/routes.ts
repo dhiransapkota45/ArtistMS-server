@@ -1,8 +1,9 @@
 import { UserRoles } from "../data/constant";
+import { validateArtist } from "../middleware/validation/artistValidation";
 import { validateUser } from "../middleware/validation/userValidation";
 import { verifyToken } from "../middleware/verifyToken";
 
-type Route = {
+export type Route = {
     path : string;
     method : 'get' | 'post' | 'put' | 'delete' | 'patch';
     action : string;
@@ -51,3 +52,44 @@ export const userRoutes : Route[] = [
     validation : validateUser
   },
 ];
+
+
+export const artistRoutes : Route[] = [
+  {
+    path: "/",
+    method: "get",
+    action: "getAllArtist",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+  },
+  {
+    path: "/delete/:id",
+    method: "delete",
+    action: "deleteArtist",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+  },
+  {
+    path: "/update/:id",
+    method: "patch",
+    action: "updateArtist",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+    validation : validateArtist
+  },
+  {
+    path: "/:id",
+    method: "get",
+    action: "getArtist",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN]
+  },
+  {
+    path: "/create",
+    method: "post",
+    action: "createArtist",
+    middleware: [verifyToken],
+    allowedUsers: [SUPER_ADMIN],
+    validation : validateArtist
+  }
+]
