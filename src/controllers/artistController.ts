@@ -34,7 +34,6 @@ export class ArtistController {
     }
 
     async deleteArtist (req: Request, res: Response): Promise<any> {
-
         const artistExist = await this.artistService.getArtistById(Number(req.params.id));
         if (!artistExist) {
             return ApiResponse.error(res, 404, "Artist not found");

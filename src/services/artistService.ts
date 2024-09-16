@@ -33,7 +33,7 @@ export class ArtistService {
 
   public async getArtistById(id: number): Promise<TArtist> {
     const query = `
-            SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released)
+            SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released
             FROM public."${Tables.ARTIST}"
             WHERE id = $1;
         `;
@@ -63,23 +63,24 @@ export class ArtistService {
     return result.rows[0] as TArtist;
   }
 
-    public async deleteArtistById(id: number): Promise<TArtist> {
-        const query = `
+  public async deleteArtistById(id: number): Promise<TArtist> {
+    console.log("reached here");
+    const query = `
                 DELETE FROM public."${Tables.ARTIST}"
                 WHERE id = $1
                 RETURNING id, name, dob, address, first_relase_year, gender, no_of_albums_released;
             `;
-        const values = [id];
-        const result = await pool.query(query, values);
-        return result.rows[0] as TArtist;
-    }
+    const values = [id];
+    const result = await pool.query(query, values);
+    return result.rows[0] as TArtist;
+  }
 
-    public async getAllArtist(): Promise<TArtist[]> {
-        const query = `
+  public async getAllArtist(): Promise<TArtist[]> {
+    const query = `
                 SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released
                 FROM public."${Tables.ARTIST}";
             `;
-        const result = await pool.query(query);
-        return result.rows as TArtist[];
-    }
+    const result = await pool.query(query);
+    return result.rows as TArtist[];
+  }
 }

@@ -13,12 +13,12 @@ export const verifyToken = async(req: UserRequest, res: Response, next: NextFunc
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET as string);
-    const userService = new UserService()
-    const user =  typeof decoded !== "string" && await userService.getUserById(decoded?.userid)
-    if(!user){
-      return ApiResponse.error(res, 401, 'Authentication failed')
-    }
-    req.user = user;
+    // const userService = new UserService()
+    // const user =  typeof decoded !== "string" && await userService.getUserById(decoded?.userid)
+    // if(!user){
+    //   return ApiResponse.error(res, 401, 'Authentication failed')
+    // }
+    req.user = typeof decoded !== "string" &&  decoded?.user;
     next();
   } catch (error : unknown) {
     if(error instanceof jwt.JsonWebTokenError){

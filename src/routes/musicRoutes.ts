@@ -20,16 +20,16 @@ export class MusicRoute implements Route {
 
   setupRoutes() {
     // this.router.post(`${this.path}/create`, asyncHandler(this.userController.createUser.bind(this.userController)));
-    userRoutes.forEach((route) => {
-      (this.router as any)[route.method](
-        `${this.path}${route.path}`,
-        // route.middleware ? [...route.middleware] : emptyNext,
-        // authorization(route.allowedUsers),
-        route.validation ? route.validation() : emptyNext,
-        asyncHandler(
-          (this.artistController as any)[route.action].bind(this.artistController)
-        )
-      );
-    });
+    // userRoutes.forEach((route) => {
+    //   (this.router as any)[route.method](
+    //     `${this.path}${route.path}`,
+    //     // route.middleware ? [...route.middleware] : emptyNext,
+    //     // authorization(route.allowedUsers),
+    //     route.validation ? route.validation() : emptyNext,
+    //     asyncHandler(
+    //       (this.artistController as any)[route.action].bind(this.artistController)
+    //     )
+    //   );
+    // });
   }
 }

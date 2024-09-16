@@ -31,17 +31,17 @@ export const validateArtist = () => {
         );
       }
 
-      if (!first_release_year || typeof first_release_year !== "number") {
+      if (!first_release_year || typeof first_release_year !== "string") {
         return ApiResponse.error(
           res,
           400,
-          "First release year is required and must be a number"
+          "First release year is required"
         );
       }
 
       if (
         no_of_albums_released &&
-        (typeof no_of_albums_released !== "number" || no_of_albums_released < 0)
+        (typeof no_of_albums_released !== "string" || Number(no_of_albums_released) < 0)
       ) {
         return ApiResponse.error(
           res,

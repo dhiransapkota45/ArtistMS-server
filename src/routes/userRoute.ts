@@ -22,7 +22,7 @@ export class UserRoute implements Route {
     userRoutes.forEach((route) => {
       (this.router as any)[route.method](
         `${this.path}${route.path}`,
-        // route.middleware ? [...route.middleware] : emptyNext,
+        route.middleware ? [...route.middleware] : emptyNext,
         // authorization(route.allowedUsers),
         route.validation ? route.validation() : emptyNext,
         asyncHandler(

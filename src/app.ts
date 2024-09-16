@@ -7,6 +7,7 @@ import { UserRoute } from './routes/userRoute';
 import { ApiError } from './utils/ApiError';
 import { AuthRoute } from './routes/authRoutes';
 import { MusicRoute } from './routes/musicRoutes';
+import { ArtistRoute } from './routes/artistRoutes';
 
  export class App {
   private app: Application = express();
@@ -16,6 +17,7 @@ import { MusicRoute } from './routes/musicRoutes';
   private userRoute = new UserRoute();
   private authRoute = new AuthRoute();
   private musicRoute = new MusicRoute()
+  private artistRoute = new ArtistRoute()
   constructor(){
     this.setupMiddlewares();
     this.setupRoutes();
@@ -37,9 +39,11 @@ import { MusicRoute } from './routes/musicRoutes';
   }
 
   setupRoutes(){
-    this.app.use('/', this.userRoute.router);
-    this.app.use('/', this.authRoute.router);
-    this.app.use('/', this.musicRoute.router)
+    this.app.use('/api', this.userRoute.router);
+    this.app.use('/api', this.authRoute.router);
+    this.app.use('/api', this.musicRoute.router)
+    this.app.use('/api', this.artistRoute.router)
+
     //test route
     this.app.get('/', (req, res) => {
       return res.send('Hello World');
