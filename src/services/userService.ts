@@ -17,7 +17,7 @@ export class UserService {
 
   public async getUserByEmail(email: string): Promise<TUser> {
     const query = `
-      SELECT id, first_name, last_name, email, role, password
+      SELECT id, first_name, last_name, email, phone, dob, gender, address, role, password
       FROM public."${Tables.USER}"
       WHERE email = $1;
     `;
@@ -28,7 +28,7 @@ export class UserService {
 
   public async getUserById(id: number): Promise<TUser> {
     const query = `
-      SELECT id, first_name, last_name, email, role
+      SELECT id, first_name, last_name, email, phone, dob, gender, address, role, role
       FROM public."${Tables.USER}"
       WHERE id = $1;
     `;
@@ -68,11 +68,10 @@ export class UserService {
 
   public async getAllUser(): Promise<TUser[]> {
     const query = `
-      SELECT id, first_name, last_name, email, role
+      SELECT id, first_name, last_name, email, phone, dob, gender, address, role
       FROM public."${Tables.USER}";
     `;
     const result = await pool.query(query);
     return result.rows as TUser[];
   }
-
 }
