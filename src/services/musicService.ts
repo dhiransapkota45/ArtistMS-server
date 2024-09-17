@@ -62,21 +62,28 @@ export class MusicService {
 
   public async getAllMusic(): Promise<TMusic[]> {
     const query = `
-                    SELECT *
-                    FROM public."${Tables.MUSIC}";
+                    SELECT 
+                      m.*, 
+                      a.name as artist_name
+                      FROM public."${Tables.MUSIC}" m
+                      JOIN public."${Tables.ARTIST}" a
+                      ON m.artist_id = a.id;
                 `;
     const result = await pool.query(query);
     return result.rows as TMusic[];
   }
 
-    public async getMusicByArtistId(artist_id: number): Promise<TMusic[]> {
-        const query = `
-                        SELECT *
-                        FROM public."${Tables.MUSIC}"
-                        WHERE artist_id = $1;
+  public async getMusicByArtistId(artist_id: number): Promise<TMusic[]> {
+    const query = `
+                        SELECT 
+                        m.*
+                        a.name as artist_name
+                        FROM public."${Tables.MUSIC}" m
+                        JOIN public."${Tables.ARTIST}" a
+                        WHERE m.artist_id = $1;
                     `;
-        const values = [artist_id];
-        const result = await pool.query(query, values);
-        return result.rows as TMusic[];
-    }
+    const values = [artist_id];
+    const result = await pool.query(query, values);
+    return result.rows as TMusic[];
+  }
 }
