@@ -18,8 +18,6 @@ const runSQLFile = async () => {
     const sqlFilePath = path.join(__dirname, '../database/migrations/init.sql');
 
     const sql = readFileSync(sqlFilePath, 'utf8');
-    console.log(sql);
-
     await client.query(sql);
     console.log('SQL file executed successfully.');
   } catch (error) {

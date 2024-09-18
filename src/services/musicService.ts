@@ -1,6 +1,11 @@
 import { Tables } from "../data/constant";
 import { pool } from "../database";
-import { TMusic, TMusicPayload } from "../types/types";
+import {
+  ListResponse,
+  Pagination,
+  TMusic,
+  TMusicPayload,
+} from "../types/types";
 
 export class MusicService {
   public async createMusic(music: TMusicPayload): Promise<TMusic> {
@@ -60,17 +65,30 @@ export class MusicService {
     return result.rows[0] as TMusic;
   }
 
-  public async getAllMusic(): Promise<TMusic[]> {
+  public async getAllMusic({
+    limit,
+    offset,
+  }: Pagination): Promise<ListResponse<TMusic>> {
     const query = `
                     SELECT 
                       m.*, 
                       a.name as artist_name
                       FROM public."${Tables.MUSIC}" m
                       JOIN public."${Tables.ARTIST}" a
-                      ON m.artist_id = a.id;
+                      ON m.artist_id = a.id
+                      LIMIT $1 OFFSET $2;
                 `;
-    const result = await pool.query(query);
-    return result.rows as TMusic[];
+    const result = await pool.query(query, [limit, offset]);
+
+    const total = await pool.query(
+      `SELECT COUNT(*) FROM public."${Tables.MUSIC}"`
+    );
+
+    return {
+      data: result.rows as TMusic[],
+      total: total.rows[0].count,
+      isNext: offset + limit < Number(total.rows[0].count),
+    };
   }
 
   public async getMusicByArtistId(artist_id: number): Promise<TMusic[]> {

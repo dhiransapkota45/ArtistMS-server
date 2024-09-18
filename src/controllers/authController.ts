@@ -17,8 +17,6 @@ export class AuthController {
       return ApiResponse.error(res, 401, "Invalid Credentials");
     }
 
-    console.log("reached here");
-
     const isPasswordMatch = await verifyPassword(
       req.body.password,
       isUserExists.password
@@ -26,8 +24,6 @@ export class AuthController {
     if (!isPasswordMatch) {
       return ApiResponse.error(res, 401, "Invalid Credentials");
     }
-
-    console.log("maybe here");
 
     // generate access and refresh token
     const accessToken = generateToken(isUserExists, "access");

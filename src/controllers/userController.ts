@@ -1,47 +1,56 @@
 import { UserService } from "../services/userService";
-import type {Request, Response}  from "express"
+import type { Request, Response } from "express";
 import { ApiResponse } from "../utils/ApiResponse";
 import { hashPassword } from "../utils/hashPassword";
+import { DEFAULT_LIMIT } from "../data/constant";
 
 export class UserController {
-    private userService: UserService = new UserService();
+  private userService: UserService = new UserService();
 
-    async createUser (req: Request, res: Response): Promise<any> {
-        const { password } = req.body;
+  async createUser(req: Request, res: Response): Promise<any> {
+    const { password } = req.body;
 
-        const userExist = await this.userService.getUserByEmail(req.body.email);
-        if (userExist) {
-            return ApiResponse.error(res, 409, "User with that email already exist");
-        }
-
-        const hashedPassword = await hashPassword(password);
-        const user = await this.userService.createUser({...req.body, password: hashedPassword});
-        return ApiResponse.success(res, "User created successfully", user, 201);
+    const userExist = await this.userService.getUserByEmail(req.body.email);
+    if (userExist) {
+      return ApiResponse.error(res, 409, "User with that email already exist");
     }
 
-    async getAllUser (req: Request, res: Response): Promise<any> {
-        const user = await this.userService.getAllUser();
-        return ApiResponse.success(res, "Users retrieved successfully", user, 200);
+    const hashedPassword = await hashPassword(password);
+    const user = await this.userService.createUser({
+      ...req.body,
+      password: hashedPassword,
+    });
+    return ApiResponse.success(res, "User created successfully", user, 201);
+  }
+
+  async getAllUser(req: Request, res: Response): Promise<any> {
+    const user = await this.userService.getAllUser({
+      limit: parseInt((req?.query?.limit as string) ?? DEFAULT_LIMIT),
+      offset: parseInt((req?.query?.offset as string) ?? 0),
+    });
+    return ApiResponse.success(res, "Users retrieved successfully", user, 200);
+  }
+
+  async deleteUser(req: Request, res: Response): Promise<any> {
+    const user = await this.userService.deleteUserById(Number(req.params.id));
+    return ApiResponse.success(res, "User deleted successfully", user, 200);
+  }
+
+  async updateUser(req: Request, res: Response): Promise<any> {
+    const userExist = await this.userService.getUserById(Number(req.params.id));
+    if (!userExist) {
+      return ApiResponse.error(res, 404, "User not found");
     }
 
-    async deleteUser (req: Request, res: Response): Promise<any> {
-        const user = await this.userService.deleteUserById(Number(req.params.id));
-        return ApiResponse.success(res, "User deleted successfully", user, 200);
-    }
+    const user = await this.userService.updateUserById(
+      Number(req.params.id),
+      req.body
+    );
+    return ApiResponse.success(res, "User updated successfully", user, 200);
+  }
 
-    async updateUser (req: Request, res: Response): Promise<any> {
-
-        const userExist = await this.userService.getUserById(Number(req.params.id));
-        if (!userExist) {
-            return ApiResponse.error(res, 404, "User not found");
-        }
-
-        const user = await this.userService.updateUserById(Number(req.params.id), req.body);
-        return ApiResponse.success(res, "User updated successfully", user, 200);
-    }
-
-    async getUser (req: Request, res: Response): Promise<any> {
-        const user = await this.userService.getUserById(Number(req.params.id));
-        return ApiResponse.success(res, "User retrieved successfully", user, 200);
-    }
+  async getUser(req: Request, res: Response): Promise<any> {
+    const user = await this.userService.getUserById(Number(req.params.id));
+    return ApiResponse.success(res, "User retrieved successfully", user, 200);
+  }
 }

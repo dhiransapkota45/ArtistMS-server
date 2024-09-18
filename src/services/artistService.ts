@@ -1,6 +1,11 @@
 import { Tables } from "../data/constant";
 import { pool } from "../database";
-import { TArtist, TArtistPayload } from "../types/types";
+import {
+  ListResponse,
+  Pagination,
+  TArtist,
+  TArtistPayload,
+} from "../types/types";
 
 export class ArtistService {
   public async createArtist(artist: TArtistPayload): Promise<TArtist> {
@@ -64,7 +69,6 @@ export class ArtistService {
   }
 
   public async deleteArtistById(id: number): Promise<TArtist> {
-    console.log("reached here");
     const query = `
                 DELETE FROM public."${Tables.ARTIST}"
                 WHERE id = $1
@@ -75,12 +79,24 @@ export class ArtistService {
     return result.rows[0] as TArtist;
   }
 
-  public async getAllArtist(): Promise<TArtist[]> {
+  public async getAllArtist({
+    limit,
+    offset,
+  }: Pagination): Promise<ListResponse<TArtist>> {
     const query = `
                 SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released
-                FROM public."${Tables.ARTIST}";
+                FROM public."${Tables.ARTIST}"
+                LIMIT $1 OFFSET $2;
             `;
-    const result = await pool.query(query);
-    return result.rows as TArtist[];
+    const result = await pool.query(query, [limit, offset]);
+
+    const total = await pool.query(
+      `SELECT COUNT(*) FROM public."${Tables.ARTIST}"`
+    );
+    return {
+      data: result.rows,
+      total: total.rows[0].count,
+      isNext: offset + limit < Number(total.rows[0].count),
+    };
   }
 }

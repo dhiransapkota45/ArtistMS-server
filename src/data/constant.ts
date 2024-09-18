@@ -10,3 +10,5 @@ export const UserRoles = {
 }
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export const DEFAULT_LIMIT = 10;

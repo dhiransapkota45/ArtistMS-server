@@ -53,3 +53,15 @@ export type TArtist = {
     created_at: Date;
     updated_at: Date;
 } & TArtistPayload;
+
+
+export type Pagination = {
+    limit: number;
+    offset: number;
+}
+
+export type ListResponse<T> = {
+    data: T[];
+    total: number;
+    isNext: boolean;
+}
