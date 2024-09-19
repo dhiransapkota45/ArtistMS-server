@@ -81,6 +81,7 @@ export const validateArtist = () => {
         );
       }
     }
+    console.log("validation passed");
     next();
   };
 };

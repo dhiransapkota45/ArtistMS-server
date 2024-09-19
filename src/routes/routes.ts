@@ -61,21 +61,28 @@ export const musicRoutes : Route[] = [
     method: "get",
     action: "getAllMusic",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [SUPER_ADMIN, ARTIST_MANAGER, ARTIST],
+  },
+  {
+    action: "getMusicByArtistId",
+    method: "get",
+    allowedUsers: [SUPER_ADMIN, ARTIST_MANAGER, ARTIST],
+    middleware: [verifyToken],
+    path: "/artist/:artist_id"
   },
   {
     path: "/delete/:id",
     method: "delete",
     action: "deleteMusic",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [ARTIST],
   },
   {
     path: "/update/:id",
     method: "patch",
     action: "updateMusic",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [ARTIST],
     validation : validateMusic
   },
   {
@@ -83,14 +90,14 @@ export const musicRoutes : Route[] = [
     method: "get",
     action: "getMusic",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN]
+    allowedUsers: [SUPER_ADMIN, ARTIST_MANAGER, ARTIST]
   },
   {
     path: "/create",
     method: "post",
     action: "createMusic",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [ARTIST_MANAGER],
     validation : validateMusic
   }
 ]
@@ -102,20 +109,20 @@ export const artistRoutes : Route[] = [
     method: "get",
     action: "getAllArtist",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [SUPER_ADMIN, ARTIST_MANAGER],
   },
   {
     path: "/delete/:id",
     method: "delete",
     action: "deleteArtist",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [ARTIST_MANAGER],
   },
   {
     path: "/update/:id",
     method: "patch",
     action: "updateArtist",
-    middleware: [verifyToken],
+    middleware: [ARTIST_MANAGER],
     allowedUsers: [SUPER_ADMIN],
     validation : validateArtist
   },
@@ -124,14 +131,14 @@ export const artistRoutes : Route[] = [
     method: "get",
     action: "getArtist",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN]
+    allowedUsers: [SUPER_ADMIN, ARTIST_MANAGER]
   },
   {
     path: "/create",
     method: "post",
     action: "createArtist",
     middleware: [verifyToken],
-    allowedUsers: [SUPER_ADMIN],
+    allowedUsers: [ARTIST_MANAGER],
     validation : validateArtist
   }
 ]

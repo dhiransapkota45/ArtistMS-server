@@ -25,13 +25,11 @@ export class AuthController {
       return ApiResponse.error(res, 401, "Invalid Credentials");
     }
 
-    // generate access and refresh token
+    // generate access token
     const accessToken = generateToken(isUserExists, "access");
-    const refreshToken = generateToken(isUserExists, "refresh");
-
-    // add accesstoken and refresh token to user response
-    res.cookie("refreshToken", refreshToken, { httpOnly: true });
-    return ApiResponse.success(res, "Login success", { accessToken });
+    
+    // add accesstoken token to user response
+    return ApiResponse.success(res, "Login success", { accessToken, user : isUserExists });
   }
 
   async register(req: Request, res: Response): Promise<any> {

@@ -8,7 +8,7 @@ import {
 } from "../types/types";
 
 export class ArtistService {
-  public async createArtist(artist: TArtistPayload): Promise<TArtist> {
+  public async createArtist(artist: TArtistPayload, manager_id: number): Promise<TArtist> {
     const {
       name,
       dob,
@@ -19,9 +19,9 @@ export class ArtistService {
     } = artist;
 
     const query = `
-            INSERT INTO public."${Tables.ARTIST}" (name, dob, address, first_release_year, gender, no_of_albums_released)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING id, name, dob, address, first_release_year, gender, no_of_albums_released;
+            INSERT INTO public."${Tables.ARTIST}" (first_release_year, no_of_albums_released, user_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id, name, dob, address, first_release_year, gender, no_of_albums_released, user_id;
         `;
     const values = [
       name,
@@ -30,13 +30,24 @@ export class ArtistService {
       first_release_year,
       gender,
       no_of_albums_released,
+      manager_id
     ];
 
     const result = await pool.query(query, values);
     return result.rows[0] as TArtist;
   }
 
-  public async getArtistById(id: number): Promise<TArtist> {
+  public async isManagedBy(manager_id: number, artist_id: number): Promise<boolean> {
+
+    const total = await pool.query(
+      `SELECT COUNT(id) FROM public."${Tables.ARTIST}" WHERE id = $1 AND manager_id = $2`,
+      [artist_id, manager_id]
+    );
+
+    return total.rows[0].count > 0;
+  }
+
+  public async getArtistById(id: number, manager_id: number): Promise<TArtist> {
     const query = `
             SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released
             FROM public."${Tables.ARTIST}"
@@ -82,16 +93,18 @@ export class ArtistService {
   public async getAllArtist({
     limit,
     offset,
-  }: Pagination): Promise<ListResponse<TArtist>> {
+  }: Pagination, manager_id: number): Promise<ListResponse<TArtist>> {
     const query = `
                 SELECT id, name, dob, address, first_release_year, gender, no_of_albums_released
                 FROM public."${Tables.ARTIST}"
-                LIMIT $1 OFFSET $2;
+                WHERE manager_id = $1
+                LIMIT $2 OFFSET $3;
             `;
-    const result = await pool.query(query, [limit, offset]);
+    const result = await pool.query(query, [manager_id, limit, offset]);
 
     const total = await pool.query(
-      `SELECT COUNT(*) FROM public."${Tables.ARTIST}"`
+      `SELECT COUNT(*) FROM public."${Tables.ARTIST}" WHERE manager_id = $1`,
+      [manager_id]
     );
     return {
       data: result.rows,

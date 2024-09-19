@@ -60,9 +60,11 @@ export class MusicController {
   }
 
   public async getMusicByArtistId(req: Request, res: Response) {
-    const music = await this.musicService.getMusicByArtistId(
-      Number(req.params.artist_id)
-    );
+    const music = await this.musicService.getMusicByArtistId({
+      limit: Number(req.query.limit ?? DEFAULT_LIMIT),
+      offset: Number(req.query.offset),
+      artist_id: Number(req.params.artist_id),
+    });
     return ApiResponse.success(res, "Music retrieved successfully", music, 200);
   }
 }

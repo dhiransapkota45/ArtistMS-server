@@ -23,7 +23,7 @@ export class UserRoute implements Route {
       (this.router as any)[route.method](
         `${this.path}${route.path}`,
         route.middleware ? [...route.middleware] : emptyNext,
-        // authorization(route.allowedUsers),
+        authorization(route.allowedUsers),
         route.validation ? route.validation() : emptyNext,
         asyncHandler(
           (this.userController as any)[route.action].bind(this.userController)

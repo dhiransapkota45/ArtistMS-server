@@ -6,7 +6,6 @@ import { verifyToken } from "../middleware/verifyToken";
 import { musicRoutes, userRoutes } from "./routes";
 import { authorization } from "../middleware/authorization";
 import { emptyNext } from "../middleware/emptyNext";
-import { ArtistController } from "../controllers/artistController";
 
 export class MusicRoute implements Route {
   private musicController: MusicController;
@@ -22,8 +21,8 @@ export class MusicRoute implements Route {
     musicRoutes.forEach((route) => {
       (this.router as any)[route.method](
         `${this.path}${route.path}`,
-        // route.middleware ? [...route.middleware] : emptyNext,
-        // authorization(route.allowedUsers),
+        route.middleware ? [...route.middleware] : emptyNext,
+        authorization(route.allowedUsers),
         route.validation ? route.validation() : emptyNext,
         asyncHandler(
           (this.musicController as any)[route.action].bind(this.musicController)

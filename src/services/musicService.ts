@@ -91,17 +91,34 @@ export class MusicService {
     };
   }
 
-  public async getMusicByArtistId(artist_id: number): Promise<TMusic[]> {
+  public async getMusicByArtistId({
+    limit,
+    offset,
+    artist_id,
+  }: Pagination & { artist_id: number }): Promise<ListResponse<TMusic>> {
+    console.log("reached here", artist_id);
+    
+
     const query = `
-                        SELECT 
-                        m.*
-                        a.name as artist_name
-                        FROM public."${Tables.MUSIC}" m
-                        JOIN public."${Tables.ARTIST}" a
-                        WHERE m.artist_id = $1;
-                    `;
-    const values = [artist_id];
-    const result = await pool.query(query, values);
-    return result.rows as TMusic[];
+                    SELECT m.*, a.name as artist_name
+                    FROM public."${Tables.MUSIC}" m
+                    JOIN public."${Tables.ARTIST}" a
+                    ON m.artist_id = a.id
+                    WHERE artist_id = $1
+                    LIMIT $2 OFFSET $3;
+                `;
+
+    const result = await pool.query(query, [artist_id, limit, offset]);
+
+    const total = await pool.query(
+      `SELECT COUNT(*) FROM public."${Tables.MUSIC}" WHERE artist_id = $1`,
+      [artist_id]
+    );
+
+    return {
+      data: result.rows as TMusic[],
+      total: total.rows[0].count,
+      isNext: offset + limit < Number(total.rows[0].count),
+    };
   }
 }

@@ -42,5 +42,28 @@ CREATE TABLE IF NOT EXISTS "Music" (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (artist_id) REFERENCES "Artist"(id)
+  FOREIGN KEY (artist_id) REFERENCES "User"(id)
 );
+
+ALTER TABLE IF EXISTS public."Artist"
+  ADD COLUMN user_id integer;
+
+ALTER TABLE public."Artist"
+  ADD CONSTRAINT "fk_artist_user_id"
+  FOREIGN KEY (user_id)
+  REFERENCES public."User" (id);
+
+ALTER TABLE IF EXISTS public."User"
+  ADD COLUMN created_by integer;
+
+
+ALTER TABLE public."User"
+  ADD CONSTRAINT "fk_user_created_by"
+  FOREIGN KEY (created_by)
+  REFERENCES public."User" (id);
+
+
+ALTER TABLE public."Music"
+  ADD CONSTRAINT "fk_music_user_id"
+  FOREIGN KEY (artist_id)
+  REFERENCES public."User" (id);
