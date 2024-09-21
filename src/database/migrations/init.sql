@@ -67,3 +67,10 @@ ALTER TABLE public."Music"
   ADD CONSTRAINT "fk_music_user_id"
   FOREIGN KEY (artist_id)
   REFERENCES public."User" (id);
+
+
+ALTER TABLE public."Artist"
+  DROP COLUMN name,
+  DROP COLUMN dob,
+  DROP COLUMN gender,
+  DROP COLUMN address;
