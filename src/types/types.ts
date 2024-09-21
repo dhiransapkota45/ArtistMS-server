@@ -39,14 +39,12 @@ export type CustomRequest<T> = Request & T
 
 export type UserRequest = CustomRequest<{ user?: TUser }>;
 
-export type TArtistPayload = {
-    name : string;
-    dob : Date;
-    gender : "m" | "f" | "o";
-    address : string;
+export type TArtistOnlyPayload = {
     first_release_year : number;
-    no_of_albums_released ?: number;    
+    no_of_albums_released ?: number;
 }
+
+export type TArtistPayload = TUser  & TArtistOnlyPayload;
 
 export type TArtist = {
     id: number;
@@ -65,3 +63,5 @@ export type ListResponse<T> = {
     total: number;
     isNext: boolean;
 }
+
+export type UserRoles = "super_admin" | "artist_manager" | "artist";
