@@ -22,19 +22,6 @@ export class ArtistRoute implements Route {
   }
 
   setupRoutes() {
-    // // this.router.post(`${this.path}/create`, asyncHandler(this.userController.createUser.bind(this.userController)));
-    // artistRoutes.forEach((route) => {
-    //   (this.router as any)[route.method](
-    //     `${this.path}${route.path}`,
-    //     // route.middleware ? [...route.middleware] : emptyNext,
-    //     // authorization(route.allowedUsers),
-    //     route.validation ? route.validation() : emptyNext,
-    //     asyncHandler(
-    //       (this.artistController as any)[route.action].bind(this.artistController)
-    //     )
-    //   );
-    // });
-
     this.router.get(`${this.path}/`, verifyToken, authorization([SUPER_ADMIN, ARTIST_MANAGER]),  asyncHandler(this.artistController.getAllArtist.bind(this.artistController)));
 
     this.router.post(`${this.path}/create`, verifyToken, authorization([ARTIST_MANAGER]), validateArtist(), asyncHandler(this.artistController.createArtist.bind(this.artistController)));
