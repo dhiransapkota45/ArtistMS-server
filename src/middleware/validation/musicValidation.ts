@@ -1,20 +1,3 @@
-// -- Create the Music table
-// CREATE TABLE IF NOT EXISTS "Music" (
-//   id SERIAL PRIMARY KEY,
-//   artist_id INT NOT NULL,
-//   title VARCHAR(255) NOT NULL,
-//   album_name VARCHAR(255) NOT NULL,
-//   genre Genre NOT NULL,
-//   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-//   FOREIGN KEY (artist_id) REFERENCES "Artist"(id)
-// );
-
-
-// create a middleware function for validating above sql query for create and update
-// take a look at the snippet from src/middleware/validation/artistValidation.ts:
-
 import { NextFunction, Request, Response } from "express";
 import { TMusicPayload } from "../../types/types";
 import { ApiResponse } from "../../utils/ApiResponse";

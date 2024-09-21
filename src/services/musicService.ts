@@ -72,7 +72,7 @@ export class MusicService {
     const query = `
                     SELECT 
                       m.*, 
-                      a.name as artist_name
+                      a.first_name || ' ' || a.last_name as artist_name, a.id as artist_id
                       FROM public."${Tables.MUSIC}" m
                       JOIN public."${Tables.ARTIST}" a
                       ON m.artist_id = a.id
@@ -96,13 +96,12 @@ export class MusicService {
     offset,
     artist_id,
   }: Pagination & { artist_id: number }): Promise<ListResponse<TMusic>> {
-    console.log("reached here", artist_id);
     
 
     const query = `
-                    SELECT m.*, a.name as artist_name
+                    SELECT m.*, a.first_name || ' ' || a.last_name as artist_name, a.id as artist_id
                     FROM public."${Tables.MUSIC}" m
-                    JOIN public."${Tables.ARTIST}" a
+                    JOIN public."${Tables.USER}" a
                     ON m.artist_id = a.id
                     WHERE artist_id = $1
                     LIMIT $2 OFFSET $3;

@@ -4,11 +4,8 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { DEFAULT_LIMIT } from "../data/constant";
 
 export class MusicController {
-  private musicService: MusicService;
-  constructor() {
-    this.musicService = new MusicService();
-  }
-
+  private musicService: MusicService = new MusicService();
+  
   public async createMusic(req: Request, res: Response) {
     const music = await this.musicService.createMusic(req.body);
     return ApiResponse.success(res, "Music created successfully", music, 201);
