@@ -9,7 +9,7 @@ import {
 } from "../types/types";
 
 export class UserService {
-  public async createUser(user: TUserPayload): Promise<TUser> {
+  public async createUser(user: TUserPayload & {created_by : number | null}): Promise<TUser> {
     const {
       first_name,
       last_name,
@@ -20,10 +20,11 @@ export class UserService {
       dob,
       address,
       role,
+      created_by
     } = user;
     const query = `
-      INSERT INTO public."${Tables.USER}" (first_name, last_name, email, password, phone, gender, dob, address, role)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      INSERT INTO public."${Tables.USER}" (first_name, last_name, email, password, phone, gender, dob, address, role, created_by)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id, first_name, last_name, email, role;
     `;
     const values = [
@@ -36,6 +37,7 @@ export class UserService {
       dob,
       address,
       role,
+      created_by
     ];
     const result = await pool.query(query, values);
     return result.rows[0] as TUser;
@@ -80,6 +82,8 @@ export class UserService {
       WHERE id = $${++lastElement}
       RETURNING id, first_name, last_name, email, role;
     `;
+
+    console.log(query, values, id);
     const result = await pool.query(query, [...values, id]);
     return result.rows[0] as TUser;
   }
@@ -102,12 +106,13 @@ export class UserService {
     const query = `
       SELECT id, first_name, last_name, email, phone, dob, gender, address, role
       FROM public."${Tables.USER}"
+      WHERE role = 'artist_manager'
       LIMIT $1 OFFSET $2;
     `;
     const result = await pool.query(query, [limit, offset]);
 
     const countQuery = `
-    SELECT COUNT(*) FROM public."${Tables.USER}";
+    SELECT COUNT(*) FROM public."${Tables.USER}" WHERE role = 'artist_manager';
   `;
 
     const countResult = await pool.query(countQuery);
@@ -116,5 +121,18 @@ export class UserService {
 
     const isNext = offset + limit < total;
     return { data: result.rows as TUser[], isNext, total };
+  }
+
+
+  async isManagedBy(
+    manager_id: number,
+    artist_id: number
+  ): Promise<boolean> {
+    const total = await pool.query(
+      `SELECT COUNT(id) FROM public."${Tables.USER}" WHERE id = $1 AND created_by = $2`,
+      [artist_id, manager_id]
+    );
+
+    return total.rows[0].count > 0;
   }
 }

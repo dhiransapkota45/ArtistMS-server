@@ -44,6 +44,7 @@ export class AuthController {
     const user = await this.userService.createUser({
       ...req.body,
       password: hashedPassword,
+      role : "super_admin"
     });
     return ApiResponse.success(res, "User created successfully", user, 201);
   }

@@ -2,13 +2,22 @@ import { UserService } from "../services/userService";
 import type { Request, Response } from "express";
 import { ApiResponse } from "../utils/ApiResponse";
 import { hashPassword } from "../utils/hashPassword";
-import { DEFAULT_LIMIT } from "../data/constant";
+import { DEFAULT_LIMIT, UserRoles } from "../data/constant";
+import { UserRequest } from "../types/types";
 
 export class UserController {
   private userService: UserService = new UserService();
 
-  async createUser(req: Request, res: Response): Promise<any> {
+  async createUser(req: UserRequest, res: Response): Promise<any> {
     const { password } = req.body;
+
+    if (req.body.role !== UserRoles.ARTIST_MANAGER) {
+      return ApiResponse.error(
+        res,
+        400,
+        "Not allowed to create user with that role"
+      );
+    }
 
     const userExist = await this.userService.getUserByEmail(req.body.email);
     if (userExist) {
@@ -19,6 +28,7 @@ export class UserController {
     const user = await this.userService.createUser({
       ...req.body,
       password: hashedPassword,
+      created_by: req?.user?.id ?? null,
     });
     return ApiResponse.success(res, "User created successfully", user, 201);
   }
@@ -32,6 +42,7 @@ export class UserController {
   }
 
   async deleteUser(req: Request, res: Response): Promise<any> {
+    
     const user = await this.userService.deleteUserById(Number(req.params.id));
     return ApiResponse.success(res, "User deleted successfully", user, 200);
   }
@@ -53,4 +64,5 @@ export class UserController {
     const user = await this.userService.getUserById(Number(req.params.id));
     return ApiResponse.success(res, "User retrieved successfully", user, 200);
   }
+  
 }

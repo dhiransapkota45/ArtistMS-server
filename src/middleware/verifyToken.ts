@@ -6,7 +6,6 @@ import { UserRequest } from '../types/types';
 
 export const verifyToken = async(req: UserRequest, res: Response, next: NextFunction) => {
   const token = req.headers['authorization']?.split(' ')[1];
-  console.log("verifyToken", token);
   if (!token) {
     return ApiResponse.error(res, 403, 'No token provided', []);
   }
