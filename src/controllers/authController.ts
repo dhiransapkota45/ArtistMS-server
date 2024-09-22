@@ -14,7 +14,7 @@ export class AuthController {
   async login(req: Request, res: Response): Promise<any> {
     const isUserExists = await this.userService.getUserByEmail(req.body.email);
     if (!isUserExists) {
-      return ApiResponse.error(res, 401, "Invalid Credentials");
+      return ApiResponse.error(res, 403, "Invalid Credentials");
     }
 
     const isPasswordMatch = await verifyPassword(
@@ -22,7 +22,7 @@ export class AuthController {
       isUserExists.password
     );
     if (!isPasswordMatch) {
-      return ApiResponse.error(res, 401, "Invalid Credentials");
+      return ApiResponse.error(res, 403, "Invalid Credentials");
     }
 
     // generate access token

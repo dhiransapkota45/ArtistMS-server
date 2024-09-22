@@ -55,16 +55,6 @@ export class ArtistController {
   }
 
   async getArtist(req: UserRequest, res: Response): Promise<any> {
-    const manager_id = req.user!.id;
-
-    // const isManagedBy = await this.userService.isManagedBy(
-    //   manager_id,
-    //   Number(req.params.id)
-    // );
-
-    // if (!isManagedBy) {
-    //   return ApiResponse.error(res, 403, "Access denied");
-    // }
 
     const artist = await this.artistService.getArtistById(Number(req.params.id));
     if (!artist) {
@@ -85,15 +75,7 @@ export class ArtistController {
       return ApiResponse.error(res, 400, "Artist id is required");
     }
     
-    // console.log(artist_id, manager_id);
-    // const isManagedBy = await this.userService.isManagedBy(
-    //   manager_id,
-    //   Number(req.params.id)
-    // );
-    // if (!isManagedBy) {
-    //   return ApiResponse.error(res, 403, "Access denied");
-    // }
-
+  
     const artistExist = await this.artistService.getArtistById(Number(req.params.id));
     if (!artistExist) {
       return ApiResponse.error(res, 404, "Artist not found");
@@ -113,14 +95,6 @@ export class ArtistController {
   async deleteArtist(req: UserRequest, res: Response): Promise<any> {
     const manager_id = req.user!.id;
 
-    // const isManagedBy = await this.userService.isManagedBy(
-    //   manager_id,
-    //   Number(req.params.id)
-    // );
-
-    // if (!isManagedBy) {
-    //   return ApiResponse.error(res, 403, "Access denied");
-    // }
     const artistExist = await this.artistService.getArtistById(Number(req.params.id));
     if (!artistExist) {
       return ApiResponse.error(res, 404, "Artist not found");

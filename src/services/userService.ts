@@ -83,7 +83,6 @@ export class UserService {
       RETURNING id, first_name, last_name, email, role;
     `;
 
-    console.log(query, values, id);
     const result = await pool.query(query, [...values, id]);
     return result.rows[0] as TUser;
   }
@@ -102,14 +101,16 @@ export class UserService {
   public async getAllUser({
     limit,
     offset,
-  }: Pagination): Promise<ListResponse<TUser>> {
+    user,
+  }: Pagination & {user : TUser}): Promise<ListResponse<TUser>> {
     const query = `
       SELECT id, first_name, last_name, email, phone, dob, gender, address, role
       FROM public."${Tables.USER}"
-      WHERE role = 'artist_manager'
+      WHERE role = 'artist_manager' AND created_by = $3
+      ORDER BY id DESC
       LIMIT $1 OFFSET $2;
     `;
-    const result = await pool.query(query, [limit, offset]);
+    const result = await pool.query(query, [limit, offset, user.id]);
 
     const countQuery = `
     SELECT COUNT(*) FROM public."${Tables.USER}" WHERE role = 'artist_manager';

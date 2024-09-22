@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import { ApiResponse } from "../utils/ApiResponse";
 import { hashPassword } from "../utils/hashPassword";
 import { DEFAULT_LIMIT, UserRoles } from "../data/constant";
-import { UserRequest } from "../types/types";
+import { TUser, UserRequest } from "../types/types";
 
 export class UserController {
   private userService: UserService = new UserService();
@@ -33,10 +33,11 @@ export class UserController {
     return ApiResponse.success(res, "User created successfully", user, 201);
   }
 
-  async getAllUser(req: Request, res: Response): Promise<any> {
+  async getAllUser(req: UserRequest, res: Response): Promise<any> {
     const user = await this.userService.getAllUser({
       limit: parseInt((req?.query?.limit as string) ?? DEFAULT_LIMIT),
       offset: parseInt((req?.query?.offset as string) ?? 0),
+      user: req?.user || {} as TUser,
     });
     return ApiResponse.success(res, "Users retrieved successfully", user, 200);
   }
