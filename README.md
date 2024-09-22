@@ -35,7 +35,7 @@ Create a `.env` file in the root directory of your project by referencing conten
 1. **Clone the repository**:
 
     ```bash
-    git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/dhiransapkota45/ArtistMS-server.git)
+    git clone https://github.com/dhiransapkota45/ArtistMS-server.git
     ```
 
 2. **Install dependencies**:
