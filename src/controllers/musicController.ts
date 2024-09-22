@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { MusicService } from "../services/musicService";
 import { ApiResponse } from "../utils/ApiResponse";
 import { DEFAULT_LIMIT } from "../data/constant";
+import { UserRequest } from "../types/types";
 
 export class MusicController {
   private musicService: MusicService = new MusicService();
@@ -63,5 +64,11 @@ export class MusicController {
       artist_id: Number(req.params.artist_id),
     });
     return ApiResponse.success(res, "Music retrieved successfully", music, 200);
+  }
+
+  public async bulkCreateMusic(req: UserRequest, res: Response) {
+    console.log(req.body, "req.body");
+    const music = await this.musicService.bulkCreateMusic(req.body, Number(req?.user?.id));
+    return ApiResponse.success(res, "Music created successfully", music, 201);
   }
 }

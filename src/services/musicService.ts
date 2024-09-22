@@ -120,4 +120,19 @@ export class MusicService {
       isNext: offset + limit < Number(total.rows[0].count),
     };
   }
+
+  public async bulkCreateMusic(music: TMusicPayload[], artist_id : number): Promise<TMusic[]> {
+    const query = `
+                    INSERT INTO public."${Tables.MUSIC}" (title, genre, artist_id, album_name)
+                    VALUES ${music
+                      .map(
+                        (m) =>
+                          `('${m.title}', '${m.genre}', ${artist_id}, '${m.album_name}')`
+                      )
+                      .join(", ")}
+                    RETURNING *;
+                `;
+    const result = await pool.query(query);
+    return result.rows as TMusic[];
+  }
 }

@@ -31,7 +31,8 @@ export class MusicRoute implements Route {
     this.router.patch(`${this.path}/update/:id`, verifyToken, authorization([ARTIST]), asyncHandler(this.musicController.updateMusic.bind(this.musicController)))
 
     this.router.delete(`${this.path}/delete/:id`, verifyToken, authorization([ARTIST]), asyncHandler(this.musicController.deleteMusic.bind(this.musicController)))
-    console.log(`${this.path}/artist/:id`)
     this.router.get(`${this.path}/artist/:artist_id`, verifyToken, authorization([SUPER_ADMIN, ARTIST_MANAGER, ARTIST]), asyncHandler(this.musicController.getMusicByArtistId.bind(this.musicController)))
+
+    this.router.post(`${this.path}/create/bulk`, verifyToken, authorization([ARTIST]), this.musicController.bulkCreateMusic.bind(this.musicController))
   }
 }
