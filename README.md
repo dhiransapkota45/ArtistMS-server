@@ -35,7 +35,7 @@ Create a `.env` file in the root directory of your project by referencing conten
 1. **Clone the repository**:
 
     ```bash
-    git clone https://github.com/yourusername/your-repo-name.git
+    git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/dhiransapkota45/ArtistMS-server.git)
     ```
 
 2. **Install dependencies**:
@@ -43,7 +43,7 @@ Create a `.env` file in the root directory of your project by referencing conten
     Navigate to the project directory and run:
 
     ```bash
-    cd your-repo-name
+    cd ArtistMS-server
     yarn install
     ```
 
