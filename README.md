@@ -1,4 +1,4 @@
-# Backend Application for Music Management System
+# Backend Application for Artist Management System
 
 This is a Node.js and Express.js backend application that serves as the API for managing artists, music, and users. It uses PostgreSQL as the database and the `pg` driver for database interactions (without any ORM). Key features include JWT authentication and role-based authorization.
 
